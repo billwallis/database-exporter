@@ -71,7 +71,7 @@ import database_exporter
 import snowflake.connector  # snowflake-connector-python
 
 
-# This dictionary is just for illustration purposes and
+# This dictionary is just for illustration purposes, and
 # you should use whatever connection method you prefer
 CREDENTIALS = {
     "user": "XXX",
@@ -88,7 +88,7 @@ def main() -> None:
     query_path = pathlib.Path("path/to/query.sql")
     with db_conn.cursor() as cursor:
         database_exporter.query_to_csv(
-            conn=db_conn,
+            conn=cursor,
             query=query_path.read_text("utf-8"),
             filepath=query_path.with_suffix(".csv"),
         )
