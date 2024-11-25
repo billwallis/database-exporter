@@ -4,7 +4,7 @@ End-to-end tests for the package.
 
 import pathlib
 import re
-from typing import Callable
+from collections.abc import Callable
 
 import pytest
 
@@ -25,6 +25,11 @@ def simple_query__csv() -> str:
 
 
 @pytest.fixture
+def simple_query__jsonl() -> str:
+    return (FIXTURES / "simple_query.jsonl").read_text().strip()
+
+
+@pytest.fixture
 def complex_query__sql() -> str:
     return (FIXTURES / "complex_query.sql").read_text().strip()
 
@@ -33,10 +38,25 @@ def complex_query__sql() -> str:
 def complex_query__csv() -> str:
     return (FIXTURES / "complex_query.csv").read_text().strip()
 
+
+@pytest.fixture
+def complex_query__jsonl() -> str:
+    return (FIXTURES / "complex_query.jsonl").read_text().strip()
+
+
 @pytest.mark.parametrize(
     "query, result, exporter",
     [
-        ("simple_query__sql", "simple_query__csv", database_exporter.query_to_csv),
+        (
+            "simple_query__sql",
+            "simple_query__csv",
+            database_exporter.query_to_csv,
+        ),
+        (
+            "simple_query__sql",
+            "simple_query__jsonl",
+            database_exporter.query_to_jsonl,
+        ),
     ],
 )
 def test__sqlite_result_sets_can_be_exported_to_a_file(
@@ -50,7 +70,7 @@ def test__sqlite_result_sets_can_be_exported_to_a_file(
     """
     The result set from a SQLite query can be exported to a file.
     """
-    actual_path = tmp_path / "actual.csv"
+    actual_path = tmp_path / "actual.file"
     exporter(
         conn=sqlite_connection,
         query=request.getfixturevalue(query),
@@ -78,8 +98,26 @@ def test__sqlite_result_sets_can_be_exported_to_a_file(
 @pytest.mark.parametrize(
     "query, result, exporter",
     [
-        ("simple_query__sql", "simple_query__csv", database_exporter.query_to_csv),
-        ("complex_query__sql", "complex_query__csv", database_exporter.query_to_csv),
+        (
+            "simple_query__sql",
+            "simple_query__csv",
+            database_exporter.query_to_csv,
+        ),
+        (
+            "complex_query__sql",
+            "complex_query__csv",
+            database_exporter.query_to_csv,
+        ),
+        (
+            "simple_query__sql",
+            "simple_query__jsonl",
+            database_exporter.query_to_jsonl,
+        ),
+        (
+            "complex_query__sql",
+            "complex_query__jsonl",
+            database_exporter.query_to_jsonl,
+        ),
     ],
 )
 def test__duckdb_result_sets_can_be_exported_to_a_file(
@@ -93,7 +131,7 @@ def test__duckdb_result_sets_can_be_exported_to_a_file(
     """
     The result set from a DuckDB query can be exported to a file.
     """
-    actual_path = tmp_path / "actual.csv"
+    actual_path = tmp_path / "actual.file"
     exporter(
         conn=duckdb_connection,
         query=request.getfixturevalue(query),
