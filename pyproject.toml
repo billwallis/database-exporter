@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "database-exporter"
-version = "0.0.0"
+version = "0.0.1"
 description = "Export database query result sets."
 authors = ["Bilbottom"]
 readme = "README.md"
