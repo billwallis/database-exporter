@@ -3,6 +3,7 @@ A module for timing SQL queries.
 """
 
 import csv
+import decimal
 import json
 import pathlib
 from collections.abc import Iterable
@@ -65,6 +66,9 @@ class CSVWriterWithJSONMarshalling:
         self.writer = csv.writer(*args, **kwargs)
 
     def writerow(self, row: Iterable) -> None:
+        """
+        Write a row to the CSV.
+        """
         self.writer.writerow(_marshal(row))
 
 
@@ -81,7 +85,7 @@ def _write_to_csv(
     result_set: list[tuple],
     headers: list[str],
     filepath: pathlib.Path,
-    csv_writer: Writer = None,
+    csv_writer: Writer | None = None,
 ) -> None:
     """
     Write the result set to a CSV.
@@ -104,7 +108,7 @@ def query_to_csv(
     conn: DatabaseConnection,
     query: str,
     filepath: str | pathlib.Path,
-    csv_writer: Writer = None,
+    csv_writer: Writer | None = None,
 ) -> None:
     """
     Run the SQL query and save the result to a CSV.
@@ -116,14 +120,59 @@ def query_to_csv(
     :param csv_writer: The writer to use. Defaults to a CSV writer that
         marshals JSON values.
     """
-    results = conn.execute(query)
-    result_set = results.fetchall()
+    response = conn.execute(query)
+    results = response.fetchall()
     filepath = pathlib.Path(filepath)
 
-    print(f"Writing {len(result_set):,} rows to '{filepath}'...")
+    print(f"Writing {len(results):,} rows to '{filepath}'...")
     _write_to_csv(
-        result_set=result_set,
-        headers=[header[0] for header in results.description],
+        result_set=results,
+        headers=[header[0] for header in response.description],
         filepath=filepath,
         csv_writer=csv_writer,
     )
+
+
+class CustomEncoder(json.JSONEncoder):
+    """
+    JSON encoder for non-primitive types.
+    """
+
+    def default(self, value: Any) -> Any:
+        """
+        Convert values to JSON types.
+        """
+
+        if isinstance(value, decimal.Decimal):
+            return float(value)  # this might have precision issues
+        return super().default(value)
+
+
+def query_to_jsonl(
+    conn: DatabaseConnection,
+    query: str,
+    filepath: str | pathlib.Path,
+    json_encoder: json.JSONEncoder | None = None,
+) -> None:
+    """
+    Run the SQL query and save the result to a JSONL file.
+
+    :param conn: The database connector. Must implement an ``execute``
+        method.
+    :param query: The SQL query to run.
+    :param filepath: The path to save the JSONL file.
+    :param json_encoder: The JSON encoder to use. Defaults to a custom
+        encoder that handles `decimal.Decimal` values.
+    """
+    response = conn.execute(query)
+    results = response.fetchall()
+    headers = [header[0] for header in response.description]
+    filepath = pathlib.Path(filepath)
+
+    print(f"Writing {len(results):,} rows to '{filepath}'...")
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    json_encoder = json_encoder or CustomEncoder
+    with filepath.open("w+") as f:
+        f.write(json.dumps(headers, cls=json_encoder) + "\n")
+        for row in results:
+            f.write(json.dumps(row, cls=json_encoder) + "\n")
