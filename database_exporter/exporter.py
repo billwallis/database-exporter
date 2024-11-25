@@ -1,5 +1,5 @@
 """
-A module for timing SQL queries.
+Run a SQL query and save the result to a file.
 """
 
 import csv

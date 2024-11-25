@@ -19,7 +19,7 @@
 
 Export database query result sets.
 
-This tool is database-agnostic -- just provide a class that connects to your database with an execute method, and the queries that you want to export.
+This tool is database-agnostic -- just provide a class that connects to your database with an execute method, and the query whose result set you want to export.
 
 ## Installation ⬇️
 
