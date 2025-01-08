@@ -1,18 +1,19 @@
+[project]
+name = "database-exporter"
+version = "0.0.1"
+description = "Export database query result sets."
+authors = [{name = "Bilbottom"}]
+readme = "README.md"
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry]
-name = "database-exporter"
-version = "0.0.1"
-description = "Export database query result sets."
-authors = ["Bilbottom"]
-readme = "README.md"
 packages = [{include = "database_exporter"}]
-
-[tool.poetry.dependencies]
-python = "^3.11"
 
 [tool.poetry.group]
 dev.optional = true
