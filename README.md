@@ -1,7 +1,7 @@
 <div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/release/python-3110/)
-[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![tests](https://github.com/Bilbottom/database-exporter/actions/workflows/tests.yaml/badge.svg)](https://github.com/Bilbottom/database-exporter/actions/workflows/tests.yaml)
 [![coverage](coverage.svg)](https://github.com/dbrgn/coverage-badge)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Bilbottom/database-exporter)](https://shields.io/badges/git-hub-last-commit)
@@ -14,6 +14,10 @@
 
 ---
 
+> [!WARNING]
+>
+> The functionality in this project is still inefficient and limited.
+
 # Database Exporter 📦📤
 
 Export database query result sets.
@@ -25,7 +29,7 @@ This tool is database-agnostic -- just provide a class that connects to your dat
 While in preview, this package is only available from GitHub:
 
 ```
-pip install git+https://github.com/Bilbottom/database-exporter@v0.0.1
+pip install git+https://github.com/Bilbottom/database-exporter@v0.0.2
 ```
 
 This will be made available on PyPI once it's ready for general use.

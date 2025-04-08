@@ -1,32 +1,30 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "database-exporter"
-version = "0.0.1"
+version = "0.0.2"
 description = "Export database query result sets."
 authors = [{name = "Bilbottom"}]
 readme = "README.md"
 requires-python = ">=3.11"
-dynamic = ["dependencies"]
+dependencies = []
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "coverage-badge>=1.1.0",
+    "pre-commit>=4.1.0",
+]
+test = [
+    "duckdb>=1.1.3",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+]
 
 
-[tool.poetry]
-packages = [{include = "database_exporter"}]
-
-[tool.poetry.group]
-dev.optional = true
-test.optional = true
-
-[tool.poetry.group.dev.dependencies]
-coverage-badge = "^1.1.0"
-pre-commit = "^3.6.2"
-
-[tool.poetry.group.test.dependencies]
-duckdb = "^1.1.3"
-pytest = "^8.0.2"
-pytest-cov = "^4.1.0"
+[tool.setuptools]
+packages = ["database_exporter"]
 
 
 [tool.pytest.ini_options]
