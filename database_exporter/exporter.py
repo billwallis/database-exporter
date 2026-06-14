@@ -28,7 +28,7 @@ class DatabaseConnection(Protocol):
     Database connector to run SQL against the database.
     """
 
-    def execute(self, *args, **kwargs) -> DatabaseCursor:
+    def execute(self, *args: Any, **kwargs: Any) -> DatabaseCursor:
         """
         Execute a statement.
         """
@@ -45,12 +45,12 @@ class Writer(Protocol):
         """
 
 
-def _marshal(row: Iterable):
+def _marshal(row: Iterable) -> tuple:
     """
     Convert dict and list values in a row to JSON.
     """
 
-    def _to_json(value: Any):
+    def _to_json(value: Any) -> str:
         is_jsonable = isinstance(value, bool | dict | list)
         return json.dumps(value) if is_jsonable else value
 
@@ -62,7 +62,7 @@ class CSVWriterWithJSONMarshalling:
     Default Python CSV writer that marshals Python types into JSON.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.writer = csv.writer(*args, **kwargs)
 
     def writerow(self, row: Iterable) -> None:
