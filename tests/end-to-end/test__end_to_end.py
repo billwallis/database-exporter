@@ -23,7 +23,7 @@ class QueryFixture:
     csv: str
     jsonl: str
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.sql = _read_fixture(f"{name}.sql")
         self.csv = _read_fixture(f"{name}.csv")
         self.jsonl = _read_fixture(f"{name}.jsonl")
